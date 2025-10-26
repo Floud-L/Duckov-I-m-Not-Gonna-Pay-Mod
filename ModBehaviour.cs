@@ -24,6 +24,8 @@ namespace Bank {
         private ATMPanel_PayPanel payPanel;
         private static TextMeshProUGUI totalBalanceText;
         private static TextMeshProUGUI debtText;
+        private static TextMeshProUGUI debtDaysText;
+        
 
         public static long TotalBalance {
             get {
@@ -136,6 +138,7 @@ namespace Bank {
             var payButtonObj = GameObject.Instantiate(originalButtonObj, originalButtonObj.transform.parent);
             var totalBalanceObj = GameObject.Instantiate(originalTextObj, originalTextObj.transform.parent);
             var debtObj = GameObject.Instantiate(originalTextObj, originalTextObj.transform.parent);
+            var debtDaysObj = GameObject.Instantiate(originalTextObj, originalTextObj.transform.parent);
             var borrowPanelObj = GameObject.Instantiate(originalPanelObj, originalPanelObj.transform.parent);
             var payPanelObj = GameObject.Instantiate(originalPanelObj, originalPanelObj.transform.parent);
 
@@ -147,6 +150,7 @@ namespace Bank {
 
             totalBalanceText = totalBalanceObj.transform.Find("Value_Cash").GetComponent<TextMeshProUGUI>();
             debtText = debtObj.transform.Find("Value_Cash").GetComponent<TextMeshProUGUI>();
+            debtDaysText = debtDaysObj.transform.Find("Value_Cash").GetComponent<TextMeshProUGUI>();
             borrowPanel = borrowPanelObj.AddComponent<ATMPanel_BorrowPanel>();
             payPanel = payPanelObj.AddComponent<ATMPanel_PayPanel>();
             bankPanel.transform.parent.gameObject.AddComponent<ATMView_Extend>();
@@ -155,6 +159,7 @@ namespace Bank {
             payButtonObj.name = "Btn_Select_Pay";
             totalBalanceObj.name = "TotalBalance";
             debtObj.name = "Debt";
+            debtDaysObj.name = "DebtDays";
             borrowPanelObj.name = "Panel_Borrow";
             payPanelObj.name = "Panel_Pay";
 
@@ -162,11 +167,14 @@ namespace Bank {
             payButtonObj.GetComponentInChildren<TextLocalizor>().Key = payButtonObj.name;
             debtObj.GetComponentInChildren<TextLocalizor>().Key = debtObj.name;
             totalBalanceObj.GetComponentInChildren<TextLocalizor>().Key = totalBalanceObj.name;
+            debtDaysObj.GetComponentInChildren<TextLocalizor>().Key = debtDaysObj.name;
 
             LocalizationManager.SetOverrideText(borrowButtonObj.name,"借钱");
             LocalizationManager.SetOverrideText(payButtonObj.name,"还钱");
             LocalizationManager.SetOverrideText(debtObj.name,"欠款");
             LocalizationManager.SetOverrideText(totalBalanceObj.name,"可借额度");
+            LocalizationManager.SetOverrideText(debtDaysObj.name,"还款天数");
+            
 
             borrowButton.onClick.AddListener(ShowBorrowPanel);
             payButton.onClick.AddListener(ShowPayPanel);
@@ -212,9 +220,13 @@ namespace Bank {
             RefreshInfo();
         }
 
-        private static void RefreshInfo() {
+        public static void RefreshInfo() {
             totalBalanceText.text = $"{(TotalBalance-Debt):n0}";
             debtText.text = $"{Debt:n0}";
+            debtDaysText.text = debtDay == -1 ? "无欠款" : $"{DueDays - (GameClock.Day - debtDay):n0}";
+            if (isOverDue) {
+                debtDaysText.text = "追债中";
+            }
         }
 
         private void TestAddDebtNoteItem() {
@@ -293,6 +305,7 @@ namespace Bank {
                 debtDay = GameClock.Day;
             }
             Debt += money;
+            RefreshInfo();
             return true;
         }
 
@@ -309,6 +322,7 @@ namespace Bank {
             if (Debt == 0) { 
                 debtDay = -1;
             }
+            RefreshInfo();
             return true;
         }
 
