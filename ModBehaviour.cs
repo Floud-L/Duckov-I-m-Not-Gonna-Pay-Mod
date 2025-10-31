@@ -5,6 +5,7 @@ using ItemStatsSystem;
 using Saves;
 using SodaCraft.Localizations;
 using System;
+using System.IO;
 using System.Reflection;
 using TMPro;
 using UnityEngine;
@@ -83,6 +84,8 @@ namespace Bank {
             }
             instance = this;
 
+            AssemblyLoader();
+
             LevelManager.OnAfterLevelInitialized += OnLevelLoaded;
             Debug.Log("Bank Mod Awake");
         }
@@ -100,8 +103,10 @@ namespace Bank {
         }
 
         protected override void OnAfterSetup() {
+            ConfigManager.ApplyToGame();
             ItemCreator.Init();
             EnemyCreator.Init();
+            
         }
 
         private void OnLevelLoaded() {
@@ -345,6 +350,25 @@ namespace Bank {
                 if (mi == null) throw new MissingMethodException("[Bank] DigitInputPanel.Clear 未找到");
 
                 return (Action)Delegate.CreateDelegate(typeof(Action), panel, mi);
+            }
+        }
+
+        public Assembly AssemblyLoader() {
+            string assemblyPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty,"YamlDotNet.dll");
+
+            Debug.Log($"[Bank] YamlDotNet path: {assemblyPath}");
+
+            if (!File.Exists(assemblyPath)) {
+                throw new FileNotFoundException("[Bank] 找不到 YamlDotNet.dll YAML序列化模块无法加载！", assemblyPath);
+            }
+
+            try {
+                Assembly assembly = Assembly.LoadFrom(assemblyPath);
+                Console.WriteLine("[Bank] 已加载 YamlDotNet: " + assembly.FullName);
+                return assembly;
+            }
+            catch (Exception ex) {
+                throw new InvalidOperationException("[Bank] 加载 YamlDotNet 程序集失败。", ex);
             }
         }
 

@@ -43,6 +43,13 @@
       <HintPath>E:\SteamLibrary\steamapps\common\Escape from Duckov\Duckov_Data\Managed\UnityEngine.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="YamlDotNet">
+      <HintPath>E:\SteamLibrary\steamapps\common\Escape from Duckov\Duckov_Data\Mods\ImNotGonnaPay\YamlDotNet.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="DefaultConfig.yaml" />
   </ItemGroup>
 
 </Project>

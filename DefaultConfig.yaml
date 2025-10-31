@@ -1,0 +1,207 @@
+# 是否启用测试模式（F2 生成Boss,方向上下切换要生成的boss,F3生成欠条）
+# 建议开启控制台查看输出日志信息
+# 默认值: false (bool)
+# Whether to enable test mode (F2 to spawn Boss, arrow keys to switch Boss type, F3 to spawn debt note)
+# It is recommended to enable the console to check output log information
+# Default: false (bool)
+EnableTestMode: false
+
+# 每级可借额度基数(总额度 = 等级 × 该数值)
+# 默认值 5000 (int)
+# Loan limit per level (Total loan = Level × this value)
+# Default: 5000 (int)
+BalanceRatePerLevel: 5000
+
+# 逾期天数（-1则为即刻逾期）
+# 默认值 4 (int)
+# Overdue days (-1 means immediately overdue)
+# Default: 4 (int)
+DueDays: 4
+
+# 是否启用生成概率
+# 默认值: true (bool)
+# Whether to enable spawn chance
+# Default: true (bool)
+enableSpawnChance: true
+
+# 是否检查生成时间
+# 默认值: true (bool)
+# Whether to check spawn time
+# Default: true (bool)
+checkTime: true
+
+# 最早生成时间
+# 默认值 6 (float,0-24)
+# Earliest spawn time
+# Default: 6 (float, 0–24)
+spawnTimeOnDayStart: 6
+
+# 最晚生成时间
+# 默认值 21 (float,0-24)
+# Latest spawn time
+# Default: 21 (float, 0–24)
+spawnTimeOnDayEnd: 21
+
+# 是否仅在非风暴天气生成
+# 默认值: true (bool)
+# Whether to spawn only during non-storm weather
+# Default: true (bool)
+checkWeather: true
+
+# 关卡内计时达到多少秒后开始允许生成
+# 默认值: 60 (float)
+# Time (in seconds) since level start before spawning is allowed
+# Default: 60 (float)
+spawnStartTime: 60
+
+# 关卡内计时超过多少秒后不再生成
+# 默认值: 600 (float)
+# Time (in seconds) since level start after which spawning stops
+# Default: 600 (float)
+spawnEndTime: 600
+
+# 与玩家的最小生成距离（米）
+# 默认值: 20 (float)
+# Minimum spawn distance from player (meters)
+# Default: 20 (float)
+spawnDistanceMin: 20
+
+# 与玩家的最大生成距离（米）
+# 默认值: 25 (float)
+# Maximum spawn distance from player (meters)
+# Default: 25 (float)
+spawnDistanceMax: 25
+
+# 是否在 JLab 关卡生成
+# 默认值: false (bool)
+# Whether to enable spawning in JLab levels
+# Default: false (bool)
+enableJLab: false
+
+# Boss 生成名单与配置
+# - presetObjName: Boss预设对象名称(与资源中的预设名匹配)
+#   displayName: 显示名称
+#   bossCount: 同种Boss一次性生成的数量(默认1)
+#   isGroupBoss: 是否为群体Boss(会带子单位)
+#   levelIndex: 解锁等级(低于或等于该等级才会参与随机,int,1-3)
+#   childPresetObjName: 子单位预设名(isGroupBoss 为 true 时有效)
+#   childCount: 子单位数量(isGroupBoss 为 true 时有效)
+#   hasLeader: 生成器是否具有队长(影响生成器组逻辑,当前此配置无效)
+# Boss spawn list and configuration
+# - presetObjName: Boss Preset object name (must match the prefab name in resources)
+#   displayName: Display name
+#   bossCount: Number of same-type bosses spawned at once (default 1)
+#   isGroupBoss: Whether it is a group boss (comes with sub-units)
+#   levelIndex: Unlock difficulty level (bosses with lower or equal level can spawn,int,1-3)
+#   childPresetObjName: Sub-unit prefab name (valid if isGroupBoss = true)
+#   childCount: Number of sub-units (valid if isGroupBoss = true)
+#   hasLeader: Whether the spawner includes a leader (affects spawn group logic, currently unused)
+BossInfoList:
+  - presetObjName: EnemyPreset_Boss_ShortEagle
+    displayName: 矮鸭
+    bossCount: 1
+    isGroupBoss: true
+    levelIndex: 1
+    childPresetObjName: EnemyPreset_Boss_ShortEagle_Elete
+    childCount: 4
+    hasLeader: false
+
+  - presetObjName: EnemyPreset_Boss_Deng
+    displayName: 劳登
+    bossCount: 1
+    isGroupBoss: true
+    levelIndex: 2
+    childPresetObjName: EnemyPreset_Boss_Deng_Wolf
+    childCount: 1
+    hasLeader: true
+
+  - presetObjName: EnemyPreset_Boss_Speedy
+    displayName: 急速团长
+    bossCount: 1
+    isGroupBoss: true
+    levelIndex: 2
+    childPresetObjName: EnemyPreset_Boss_Speedy_Child
+    childCount: 4
+    hasLeader: true
+
+  - presetObjName: EnemyPreset_Boss_Vida
+    displayName: 维达
+    bossCount: 1
+    isGroupBoss: false
+    levelIndex: 3
+    hasLeader: true
+
+  - presetObjName: EnemyPreset_Boss_Grenade
+    displayName: 炸弹狂人
+    bossCount: 1
+    isGroupBoss: false
+    levelIndex: 3
+    hasLeader: true
+
+  - presetObjName: EnemyPreset_Boss_ServerGuardian
+    displayName: 矿长
+    bossCount: 1
+    isGroupBoss: true
+    levelIndex: 3
+    childPresetObjName: EnemyPreset_Scav_Elete
+    childCount: 4
+    hasLeader: true
+
+  - presetObjName: EnemyPreset_Boss_3Shot
+    displayName: 三枪哥
+    bossCount: 1
+    isGroupBoss: true
+    levelIndex: 3
+    childPresetObjName: EnemyPreset_Boss_3Shot_Child
+    childCount: 3
+    hasLeader: true
+
+  - presetObjName: EnemyPreset_Boss_Fly
+    displayName: 蝇蝇队长
+    bossCount: 1
+    isGroupBoss: true
+    levelIndex: 3
+    childPresetObjName: EnemyPreset_Boss_Fly_Child
+    childCount: 2
+    hasLeader: false
+
+  - presetObjName: EnemyPreset_BossMelee_SchoolBully
+    displayName: 校霸
+    bossCount: 1
+    isGroupBoss: true
+    levelIndex: 3
+    childPresetObjName: EnemyPreset_BossMelee_SchoolBully_Child
+    childCount: 3
+    hasLeader: false
+
+  - presetObjName: EnemyPreset_Boss_BALeader
+    displayName: BA队长
+    bossCount: 1
+    isGroupBoss: true
+    levelIndex: 3
+    childPresetObjName: EnemyPreset_Boss_BALeader_Child
+    childCount: 3
+    hasLeader: true
+
+  - presetObjName: EnemyPreset_Boss_RPG
+    displayName: 迷塞尔
+    bossCount: 1
+    isGroupBoss: false
+    levelIndex: 3
+    hasLeader: true
+
+  - presetObjName: EnemyPreset_Boss_Shot
+    displayName: 喷子
+    bossCount: 1
+    isGroupBoss: true
+    levelIndex: 3
+    childPresetObjName: EnemyPreset_Scav
+    childCount: 1
+    hasLeader: true
+
+  - presetObjName: EnemyPreset_Boss_SenorEngineer
+    displayName: 高级工程师
+    bossCount: 1
+    isGroupBoss: false
+    levelIndex: 3
+    hasLeader: true

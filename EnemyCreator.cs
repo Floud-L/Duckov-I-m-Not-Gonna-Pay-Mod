@@ -23,6 +23,8 @@ namespace Bank {
         private static UniTask spawnTask = UniTask.CompletedTask;
         private static CancellationTokenSource spawnCts;
 
+        public static bool enableSpawnChance = true;
+        public static bool enableJLab = false;
         public static bool allwaysHasLeader = true;
         public static bool checkTime = true;
         public static float spawnTimeOnDayStart = 6f;
@@ -38,7 +40,7 @@ namespace Bank {
         public static float spawnEndTime = 600f;
         public static float spawnDistanceMin = 20;
         public static float spawnDistanceMax = 25;
-        public static string[] spawnLevelName = new string[] { "Level_GroundZero_Main", "Level_HiddenWarehouse_Main", "Level_Farm_Main" };
+        public static List<string> spawnLevelName = new List<string> { "Level_GroundZero_Main", "Level_HiddenWarehouse_Main", "Level_Farm_Main" };
 
         public static bool EnableTestMode => ModBehaviour.EnableTestMode;
         private static int testSpawnBossIndex = 0;
@@ -86,6 +88,9 @@ namespace Bank {
             Debug.Log($"[Bank] 当前关卡: {levelInfo.sceneName}");
 
             var canLevelSpawn = false;
+            if (enableJLab) {
+                spawnLevelName.Add("Level_JLab_Main");
+            }
             foreach (var levelName in spawnLevelName) {
                 if (levelInfo.sceneName == levelName) {
                     canLevelSpawn = true;
@@ -97,6 +102,7 @@ namespace Bank {
                 return false;
             }
 
+            if(enableSpawnChance)
             if (Random.Range(0f, 1f) > spawnChance) {
                 Debug.Log("[Bank] 未达到生成概率");
                 return false;
@@ -131,6 +137,10 @@ namespace Bank {
         }
 
         private static bool LevelTimeChecker(float time) {
+            if (LevelManager.Instance == null) { 
+                Debug.Log($"[Bank] LevelManager不存在");
+                return false;
+            }
             var levelTime = LevelManager.Instance.LevelTime;
             Debug.Log($"[Bank] 关卡时间: {levelTime}");
             if (levelTime >= time) { 
@@ -230,7 +240,7 @@ namespace Bank {
 
             //Boss生成器设置
             bossSpawner.isStaticTarget = false;
-            bossSpawner.spawnCountRange = new Vector2Int(1, 1);
+            bossSpawner.spawnCountRange = new Vector2Int(bossInfo.bossCount, bossInfo.bossCount);
 
             //如果字典中没有该Boss预设体的修改版则进行复制与修改
             var bossName = bossInfo.presetObjName + "_Bank";
@@ -276,9 +286,11 @@ namespace Bank {
             };
 
             //Boss生成点设置
-            bossPoints.points = new List<Vector3> {
-                spawnPosition
-            };
+            bossPoints.points = new List<Vector3>();
+            for (int i = 0; i < bossInfo.bossCount; i++) {
+                var bossSpawnPos = spawnPosition + new Vector3(Random.Range(-2f, 2f), 0, Random.Range(-2f, 2f));
+                bossPoints.points.Add(bossSpawnPos);
+            }
 
             //子单位生成器创建
             if (bossInfo.isGroupBoss) {
@@ -394,6 +406,7 @@ namespace Bank {
         public struct BossInfo {
             public string presetObjName;
             public string displayName;
+            public int bossCount; // 新增字段：同种Boss同时生成的数量
             public bool isGroupBoss;
             public int levelIndex;
             public string childPresetObjName;
@@ -401,10 +414,11 @@ namespace Bank {
             public bool hasLeader;
         }
 
-        private static List<BossInfo> BossInfoList = new List<BossInfo>() {
+        public static List<BossInfo> BossInfoList = new List<BossInfo>() {
             new BossInfo {
                 presetObjName = "EnemyPreset_Boss_ShortEagle",
                 displayName = "矮鸭",
+                bossCount = 1,
                 levelIndex = 1,
                 isGroupBoss = true,
                 childPresetObjName = "EnemyPreset_Boss_ShortEagle_Elete",
@@ -414,6 +428,7 @@ namespace Bank {
             new BossInfo {
                 presetObjName = "EnemyPreset_Boss_Deng",
                 displayName = "劳登",
+                bossCount = 1,
                 levelIndex = 2,
                 isGroupBoss = true,
                 childPresetObjName ="EnemyPreset_Boss_Deng_Wolf",
@@ -423,6 +438,7 @@ namespace Bank {
             new BossInfo {
                 presetObjName = "EnemyPreset_Boss_Speedy",
                 displayName = "急速团长",
+                bossCount = 1,
                 levelIndex = 2,
                 isGroupBoss = true,
                 childPresetObjName = "EnemyPreset_Boss_Speedy_Child",
@@ -432,6 +448,7 @@ namespace Bank {
             new BossInfo {
                 presetObjName = "EnemyPreset_Boss_Vida",
                 displayName = "维达",
+                bossCount = 1,
                 levelIndex = 3,
                 isGroupBoss = false,
                 hasLeader = true,
@@ -439,6 +456,7 @@ namespace Bank {
             new BossInfo {
                 presetObjName = "EnemyPreset_Boss_Grenade",
                 displayName = "炸弹狂人",
+                bossCount = 1,
                 levelIndex = 3,
                 isGroupBoss = false,
                 hasLeader = true,
@@ -446,6 +464,7 @@ namespace Bank {
             new BossInfo {
                 presetObjName = "EnemyPreset_Boss_ServerGuardian",
                 displayName = "矿长",
+                bossCount = 1,
                 levelIndex = 3,
                 isGroupBoss = true,
                 childPresetObjName = "EnemyPreset_Scav_Elete",
@@ -455,6 +474,7 @@ namespace Bank {
             new BossInfo {
                 presetObjName = "EnemyPreset_Boss_3Shot",
                 displayName = "三枪哥",
+                bossCount = 1,
                 levelIndex = 3,
                 isGroupBoss = true,
                 childPresetObjName = "EnemyPreset_Boss_3Shot_Child",
@@ -464,6 +484,7 @@ namespace Bank {
             new BossInfo {
                 presetObjName = "EnemyPreset_Boss_Fly",
                 displayName = "蝇蝇队长",
+                bossCount = 1,
                 levelIndex = 3,
                 isGroupBoss = true,
                 childPresetObjName = "EnemyPreset_Boss_Fly_Child",
@@ -473,6 +494,7 @@ namespace Bank {
             new BossInfo {
                 presetObjName = "EnemyPreset_BossMelee_SchoolBully",
                 displayName = "校霸",
+                bossCount = 1,
                 levelIndex = 3,
                 isGroupBoss = true,
                 childPresetObjName = "EnemyPreset_BossMelee_SchoolBully_Child",
@@ -482,6 +504,7 @@ namespace Bank {
             new BossInfo {
                 presetObjName = "EnemyPreset_Boss_BALeader",
                 displayName = "BA队长",
+                bossCount = 1,
                 levelIndex = 3,
                 isGroupBoss = true,
                 childPresetObjName = "EnemyPreset_Boss_BALeader_Child",
@@ -491,6 +514,7 @@ namespace Bank {
             new BossInfo {
                 presetObjName = "EnemyPreset_Boss_RPG",
                 displayName = "迷塞尔",
+                bossCount = 1,
                 levelIndex = 3,
                 isGroupBoss = false,
                 hasLeader = true,
@@ -498,6 +522,7 @@ namespace Bank {
             new BossInfo {
                 presetObjName = "EnemyPreset_Boss_Shot",
                 displayName = "喷子",
+                bossCount = 1,
                 levelIndex = 3,
                 isGroupBoss = true,
                 childPresetObjName = "EnemyPreset_Scav",
@@ -507,6 +532,7 @@ namespace Bank {
             new BossInfo {
                 presetObjName = "EnemyPreset_Boss_SenorEngineer",
                 displayName = "高级工程师",
+                bossCount = 1,
                 levelIndex = 3,
                 isGroupBoss = false,
                 hasLeader = true,
