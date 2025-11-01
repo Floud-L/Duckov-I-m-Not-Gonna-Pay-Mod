@@ -18,7 +18,7 @@ namespace Bank {
         public static bool EnableTestMode = false;
         public static readonly int DebtNoteTypeID = 14001;
         public static int BalanceRatePerLevel = 5000;
-        public static int DueDays = 4;
+        public static int DueDays = 2;
 
         private GameObject? bankPanel = null;
         private ATMPanel_BorrowPanel borrowPanel;

@@ -37,7 +37,7 @@ namespace Bank {
         };
 
         public static float spawnStartTime = 60f;
-        public static float spawnEndTime = 600f;
+        public static float spawnEndTime = 240f;
         public static float spawnDistanceMin = 20;
         public static float spawnDistanceMax = 25;
         public static List<string> spawnLevelName = new List<string> { "Level_GroundZero_Main", "Level_HiddenWarehouse_Main", "Level_Farm_Main" };

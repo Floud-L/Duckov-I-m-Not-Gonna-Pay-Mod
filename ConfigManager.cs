@@ -13,7 +13,7 @@ namespace Bank
     {
         public bool EnableTestMode { get; set; } = false;
         public int BalanceRatePerLevel { get; set; } = 5000;
-        public int DueDays { get; set; } = 4;
+        public int DueDays { get; set; } = 2;
 
         public bool enableSpawnChance { get; set; } = true;
         public bool checkTime { get; set; } = true;
@@ -21,7 +21,7 @@ namespace Bank
         public float spawnTimeOnDayEnd { get; set; } = 21f;
         public bool checkWeather { get; set; } = true;
         public float spawnStartTime { get; set; } = 60f;
-        public float spawnEndTime { get; set; } = 600f;
+        public float spawnEndTime { get; set; } = 240f;
         public float spawnDistanceMin { get; set; } = 20f;
         public float spawnDistanceMax { get; set; } = 25f;
         public bool enableJLab { get; set; } = false;

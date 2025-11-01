@@ -13,10 +13,10 @@ EnableTestMode: false
 BalanceRatePerLevel: 5000
 
 # 逾期天数（-1则为即刻逾期）
-# 默认值 4 (int)
+# 默认值 2 (int)
 # Overdue days (-1 means immediately overdue)
-# Default: 4 (int)
-DueDays: 4
+# Default: 2 (int)
+DueDays: 2
 
 # 是否启用生成概率
 # 默认值: true (bool)
@@ -55,10 +55,10 @@ checkWeather: true
 spawnStartTime: 60
 
 # 关卡内计时超过多少秒后不再生成
-# 默认值: 600 (float)
+# 默认值: 240 (float)
 # Time (in seconds) since level start after which spawning stops
-# Default: 600 (float)
-spawnEndTime: 600
+# Default: 240 (float)
+spawnEndTime: 240
 
 # 与玩家的最小生成距离（米）
 # 默认值: 20 (float)
